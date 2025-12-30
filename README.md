@@ -19,27 +19,6 @@ product-management/
 - **XAMPP with MySQL enabled**
 - **Maven 3.6+** (included with mvnw)
 
-## Quick Start
-
-#### 1. Start XAMPP MySQL
-1. Open **XAMPP Control Panel**
-2. Click **"Start"** for **MySQL**
-3. Verify MySQL is active (green button)
-
-#### 2. Backend (Spring Boot)
-```bash
-cd backend
-.\run-spring.bat
-```
-API available at http://localhost:3333
-
-#### 3. Frontend (Angular)
-```bash
-cd frontend
-.\start-frontend.bat
-```
-Interface available at http://localhost:4200
-
 ## Database Configuration
 
 The application uses **XAMPP MySQL** with the following settings:
