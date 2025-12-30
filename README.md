@@ -21,14 +21,6 @@ product-management/
 
 ## Quick Start
 
-### Option 1: Automatic startup (Recommended)
-```bash
-# Starts XAMPP MySQL + Backend + Frontend automatically
-.\start-all-with-xampp.bat
-```
-
-### Option 2: Manual startup
-
 #### 1. Start XAMPP MySQL
 1. Open **XAMPP Control Panel**
 2. Click **"Start"** for **MySQL**
@@ -154,13 +146,6 @@ frontend/
 - Responsive Bootstrap interface
 - Form validation
 - 100% dynamic data from MySQL database
-- No static data in code
-
-## Development
-
-This project was developed as part of the "Application Architectures" course.
-
-**Student**: Emna Othmen  
 **Professor**: M. Zayeni  
 **Course**: Application Architectures  
 **Year**: 2024-2025
