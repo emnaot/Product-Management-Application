@@ -1,0 +1,176 @@
+<div class="container">
+  <!-- Formulaire d'édition (sans champ ID) -->
+  <form *ngIf="editMode" #produitForm="ngForm" (ngSubmit)="validerFormulaire(produitForm)">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h3>Modifier le Produit</h3>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="code" class="form-label">Code:</label>
+            <input type="text" id="code" name="code" class="form-control" 
+                   [(ngModel)]="produitCourant.code" required />
+          </div>
+          <div class="col-md-6">
+            <label for="designation" class="form-label">Désignation:</label>
+            <input type="text" id="designation" name="designation" class="form-control" 
+                   [(ngModel)]="produitCourant.designation" required />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label for="prix" class="form-label">Prix:</label>
+            <input type="number" step="0.01" id="prix" name="prix" class="form-control" 
+                   [(ngModel)]="produitCourant.prix" required />
+          </div>
+          <div class="col-md-4">
+            <label for="quantite" class="form-label">Quantité:</label>
+            <input type="number" id="quantite" name="quantite" class="form-control" 
+                   [(ngModel)]="produitCourant.quantite" required />
+          </div>
+          <div class="col-md-4">
+            <label for="dateAchat" class="form-label">Date d'achat:</label>
+            <input type="date" id="dateAchat" name="dateAchat" class="form-control" 
+                   [(ngModel)]="produitCourant.dateAchat" required />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="categorie" class="form-label">Catégorie:</label>
+            <select id="categorie" name="categorie" class="form-control" 
+                    [(ngModel)]="selectedCategory">
+              <option value="">-- Sélectionner une catégorie --</option>
+              <option *ngFor="let categorie of categories" [ngValue]="categorie">
+                {{ categorie.libelle }} ({{ categorie.code }})
+              </option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <div class="form-check mt-4">
+              <input type="checkbox" id="enPromotion" name="enPromotion" class="form-check-input" 
+                     [(ngModel)]="produitCourant.enPromotion" />
+              <label for="enPromotion" class="form-check-label">Produit en promotion</label>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="erreur" class="alert alert-danger">
+          {{ erreur }}
+        </div>
+
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary me-2" [disabled]="!produitForm.form.valid">
+            <i class="bi bi-check-circle"></i> Valider
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="annulerEdition()">
+            <i class="bi bi-x-circle"></i> Annuler
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- Section des filtres -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h3>Filtres de Recherche</h3>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <label for="searchTerm" class="form-label">
+            <i class="bi bi-search"></i> Rechercher par désignation:
+          </label>
+          <input type="text" id="searchTerm" name="searchTerm" class="form-control" 
+                 [(ngModel)]="searchTerm" (input)="onSearchTermChange()" 
+                 placeholder="Tapez pour rechercher...">
+        </div>
+        <div class="col-md-4">
+          <label for="categorieFilter" class="form-label">Filtrer par catégorie:</label>
+          <select id="categorieFilter" name="categorieFilter" class="form-control" 
+                  [(ngModel)]="filtreCategorieId" (change)="filtrerParCategorie()">
+            <option value="">-- Toutes les catégories --</option>
+            <option *ngFor="let categorie of categories" [value]="categorie.id">
+              {{ categorie.libelle }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <div class="form-check mt-4">
+            <input type="checkbox" id="filtrePromotion" name="filtrePromotion" class="form-check-input" 
+                   [(ngModel)]="filtrePromotion" (change)="filtrerPromotion()">
+            <label for="filtrePromotion" class="form-check-label">
+              Produits en promotion uniquement
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-3">
+        <button type="button" class="btn btn-info" (click)="reinitialiserFiltres()">
+          <i class="bi bi-arrow-clockwise"></i> Réinitialiser les filtres
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Liste des produits -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Liste des Produits ({{ filteredProduits.length }} produit(s))</h2>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>Code</th>
+              <th>Désignation</th>
+              <th>Prix</th>
+              <th>Quantité</th>
+              <th>Date d'achat</th>
+              <th>Catégorie</th>
+              <th>Promotion</th>
+              <th colspan="2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of filteredProduits">
+              <td>{{ p.code || 'N/A' }}</td>
+              <td>{{ p.designation || 'Sans nom' }}</td>
+              <td>{{ (p.prix || 0) | currency:'EUR':'symbol':'1.2-2' }}</td>
+              <td>{{ p.quantite || 0 }}</td>
+              <td>{{ p.dateAchat | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <span *ngIf="p.categorie" class="badge bg-secondary">
+                  {{ p.categorie.libelle }}
+                </span>
+                <span *ngIf="!p.categorie" class="text-muted">Aucune</span>
+              </td>
+              <td>
+                <span *ngIf="p.enPromotion" class="badge bg-success">En promotion</span>
+                <span *ngIf="!p.enPromotion" class="badge bg-light text-dark">Normal</span>
+              </td>
+              <td>
+                <button (click)="editerProduit(p)" class="btn btn-sm btn-dark">
+                  <i class="bi bi-pen"></i> Éditer
+                </button>
+              </td>
+              <td>
+                <button (click)="supprimerProduit(p)" class="btn btn-sm btn-danger">
+                  <i class="bi bi-trash"></i> Supprimer
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div *ngIf="filteredProduits.length === 0" class="alert alert-info text-center">
+        Aucun produit trouvé avec les critères de recherche actuels.
+      </div>
+    </div>
+  </div>
+</div>

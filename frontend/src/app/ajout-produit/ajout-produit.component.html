@@ -1,0 +1,97 @@
+<div class="container">
+    <h1>Fiche Produit</h1>
+    <form #produitForm="ngForm" (ngSubmit)="validerFormulaire()">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="code" class="form-label">Code:</label>
+              <input type="text" id="code" name="code" class="form-control" 
+                     [(ngModel)]="nouveauProduit.code" required />
+            </div>
+            <div class="col-md-6">
+              <label for="designation" class="form-label">Désignation:</label>
+              <input type="text" id="designation" name="designation" class="form-control" 
+                     [(ngModel)]="nouveauProduit.designation" required />
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label for="prix" class="form-label">Prix:</label>
+              <input type="number" step="0.01" id="prix" name="prix" class="form-control" 
+                     [(ngModel)]="nouveauProduit.prix" required />
+            </div>
+            <div class="col-md-4">
+              <label for="quantite" class="form-label">Quantité:</label>
+              <input type="number" id="quantite" name="quantite" class="form-control" 
+                     [(ngModel)]="nouveauProduit.quantite" required />
+            </div>
+            <div class="col-md-4">
+              <label for="dateAchat" class="form-label">Date d'achat:</label>
+              <input type="date" id="dateAchat" name="dateAchat" class="form-control" 
+                     [(ngModel)]="nouveauProduit.dateAchat" required />
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="categoryId" class="form-label">Catégorie:</label>
+              <select id="categoryId" name="categoryId" class="form-control" 
+                      [(ngModel)]="selectedCategoryId">
+                <option value="">-- Sélectionner une catégorie --</option>
+                <option *ngFor="let category of categories" [value]="category.id">
+                  {{ category.libelle }} ({{ category.code }})
+                </option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <div class="form-check mt-4">
+                <input type="checkbox" id="enPromotion" name="enPromotion" class="form-check-input" 
+                       [(ngModel)]="nouveauProduit.enPromotion" />
+                <label for="enPromotion" class="form-check-label">Produit en promotion</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary me-2" [disabled]="!produitForm.form.valid">
+              <i class="bi bi-check-circle"></i> Valider
+            </button>
+            <button type="button" (click)="effacer()" class="btn btn-danger">
+              <i class="bi bi-trash"></i> Effacer
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- Section pour ajouter une nouvelle catégorie -->
+    <div class="card mt-4">
+      <div class="card-header">
+        <h3>Ajouter une Catégorie</h3>
+      </div>
+      <div class="card-body">
+        <form #categorieForm="ngForm" (ngSubmit)="ajouterCategorie()">
+          <div class="row">
+            <div class="col-md-6">
+              <label for="codeCategorie" class="form-label">Code:</label>
+              <input type="text" id="codeCategorie" name="codeCategorie" class="form-control" 
+                     [(ngModel)]="nouvelleCategorie.code" required />
+            </div>
+            <div class="col-md-6">
+              <label for="libelleCategorie" class="form-label">Libellé:</label>
+              <input type="text" id="libelleCategorie" name="libelleCategorie" class="form-control" 
+                     [(ngModel)]="nouvelleCategorie.libelle" required />
+            </div>
+          </div>
+          <div class="text-center mt-3">
+            <button type="submit" class="btn btn-success" [disabled]="!categorieForm.form.valid">
+              <i class="bi bi-plus-circle"></i> Ajouter Catégorie
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>
+  
